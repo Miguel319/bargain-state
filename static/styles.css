@@ -1,7 +1,10 @@
 :root {
   --bodyBg: #f0f4f8;
   --menuBg: #334d68;
-  --progressBar: #54d1db;
+  --c-blue: #3e6991;
+  --bluer: #56859b;
+
+  --progressBar: #549ea3;
 }
 
 body {
@@ -10,6 +13,17 @@ body {
 
 #menu {
   background: var(--menuBg);
+
+  background: var(--bluer); /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    var(--c-blue)
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    var(--c-blue),
+    var(--bluer)
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 /* Overrides default styled accordion styles (too much bottom padding) */

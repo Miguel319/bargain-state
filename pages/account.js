@@ -1,9 +1,5 @@
-import AccountHeader from '../components/Account/AccountHeader';
-
 function Account() {
-  return <>
-    <AccountHeader/>
-  </>;
+  return <>account</>;
 }
 
 export default Account;
