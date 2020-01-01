@@ -31,13 +31,13 @@ async function handlePostReq(req, res) {
   console.log(req.body);
   const { name, price, description, mediaUrl } = req.body;
 
-  if (!name || !price || !description)
-    return res.status(422).json({
-      sucess: false,
-      message: "All fields are required."
-    });
-
   try {
+    if (!name || !price || !description || !mediaUrl)
+      return res.status(422).json({
+        sucess: false,
+        message: "All fields are required."
+      });
+
     const product = await new Product({
       name,
       price,
@@ -50,7 +50,8 @@ async function handlePostReq(req, res) {
       product: product.data
     });
   } catch (e) {
-    return res.status(400).json({
+    console.error(e);
+    return res.status(500).json({
       sucess: false,
       message: "Unable to process operation. Please try again later."
     });
