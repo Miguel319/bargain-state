@@ -1,15 +1,22 @@
 import Product from "../../models/Product";
+import connectDb from "../../utils/connectDb";
+
+connectDb();
 
 export default async (req, res) => {
   switch (req.method) {
     case "GET":
       await handleGetReq(req, res);
       break;
+    case "POST":
+      await handlePostReq(req, res);
+      break;
     case "DELETE":
       await handleDeleteReq(req, res);
       break;
     default:
       res.status(405).send(`Method ${req.method} not allowed`);
+      break;
   }
 };
 
@@ -20,9 +27,39 @@ const handleGetReq = async (req, res) => {
   res.status(200).json(product);
 };
 
-const handleDeleteReq = async (req, res) => {
-    const { _id } = req.query;
-    await Product.findOneAndDelete({_id});
-    res.status(204)
-        .json({});
+async function handlePostReq(req, res) {
+  console.log(req.body);
+  const { name, price, description, mediaUrl } = req.body;
+
+  if (!name || !price || !description)
+    return res.status(422).json({
+      sucess: false,
+      message: "All fields are required."
+    });
+
+  try {
+    const product = await new Product({
+      name,
+      price,
+      description,
+      mediaUrl
+    }).save();
+
+    res.status(201).json({
+      sucess: true,
+      product: product.data
+    });
+  } catch (e) {
+    return res.status(400).json({
+      sucess: false,
+      message: "Unable to process operation. Please try again later."
+    });
+  }
+  res.status(201).json(product);
 }
+
+const handleDeleteReq = async (req, res) => {
+  const { _id } = req.query;
+  await Product.findOneAndDelete({ _id });
+  res.status(204).json({});
+};

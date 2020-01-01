@@ -4,7 +4,7 @@ import ProductAttributes from "../components/Product/ProductAttributes";
 import baseUrl from "../utils/baseUrl";
 
 function Product({ product }) {
-  return (
+  return (     
     <>
       <ProductSummary {...product} />
       <ProductAttributes {...product} />
