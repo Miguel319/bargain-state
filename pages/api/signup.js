@@ -57,10 +57,10 @@ const emailTaken = (res, user) => {
 };
 
 const pswrdLengthErr = (password, res) => {
-  if (password.length < 4) {
+  if (password.length < 3) {
     return res.status(422).send({
       success: true,
-      message: "The password must have at least 4 characters."
+      message: "The password must have at least 3 characters."
     });
   }
 };
@@ -70,6 +70,13 @@ const usernameLengthErr = (username, res) => {
     return res.status(422).send({
       success: false,
       message: "The username must have at least 4 characters."
+    });
+  }
+
+  if (username.length > 10) {
+    return res.status(422).send({
+      success: false,
+      message: "The username can't have more than 10 characters."
     });
   }
 };
