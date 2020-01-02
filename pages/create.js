@@ -42,7 +42,7 @@ function CreateProduct() {
       setMediaPreview(window.URL.createObjectURL(files[0]));
     } else {
       setProduct(prevState => ({ ...prevState, [name]: value }));
-    } 
+    }
   };
 
   const handleImgUpload = async () => {
@@ -62,9 +62,9 @@ function CreateProduct() {
     try {
       event.preventDefault();
       setLoading(true);
+      setError("");
 
       const mediaUrl = await handleImgUpload();
-      console.log(mediaUrl);
 
       const productUrl = `${baseUrl}/api/product`;
       const { name, price, description } = product;
