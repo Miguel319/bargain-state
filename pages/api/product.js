@@ -34,7 +34,7 @@ async function handlePostReq(req, res) {
   try {
     if (!name || !price || !description || !mediaUrl)
       return res.status(422).json({
-        sucess: false,
+        success: false,
         message: "All fields are required."
       });
 
@@ -52,7 +52,7 @@ async function handlePostReq(req, res) {
   } catch (e) {
     console.error(e);
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Unable to process operation. Please try again later."
     });
   }
