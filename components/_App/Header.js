@@ -1,18 +1,16 @@
 import { Menu, Container, Image, Icon } from "semantic-ui-react";
 import Link from "next/link";
-import Router, { useRouter } from 'next/router';
-import NProgress from 'nprogress';
-  
+import Router, { useRouter } from "next/router";
+import NProgress from "nprogress";
+
 Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
-function Header() {
+function Header({ user }) {
   const router = useRouter();
-  const user = false;
 
-  const isActive = (route) =>
-   route === router.pathname;
+  const isActive = route => route === router.pathname;
 
   return (
     <Menu stackable fluid id="menu" inverted>
