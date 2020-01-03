@@ -4,6 +4,7 @@ import { parseCookies, destroyCookie } from "nookies";
 import { redirectUser } from "../utils/auth";
 import baseUrl from "../utils/baseUrl";
 import axios from "axios";
+import { Router } from "next/router";
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -26,18 +27,34 @@ class MyApp extends App {
         const url = `${baseUrl}/api/account`;
         const payload = { headers: { Authorization: token } };
         const response = await axios.get(url, payload);
-
         const user = response.data;
+
+        const isRoot = user.role === "root";
+        const isAdmin = user.role === "admin";
+        const unallowed = !(isRoot || isAdmin) && ctx.pathname === "/create";
+
+        if (unallowed) redirectUser(ctx, "/");
+        
+
         pageProps.user = user;
       } catch (e) {
         console.error("Unable to get current user", e);
-        destroyCookie(ctx, 'token');
-        redirectUser(ctx, '/login');
-
+        destroyCookie(ctx, "token");
+        redirectUser(ctx, "/login");
       }
     }
 
     return { pageProps };
+  }
+
+  componentDidMount() {
+    window.addEventListener('storage', this.syncLogout);
+  }
+
+  syncLogout = event => {
+    if (event.key === 'logout') {
+      Router.push('/login');
+    }
   }
 
   render() {
