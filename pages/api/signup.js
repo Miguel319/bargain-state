@@ -1,6 +1,7 @@
 import connectDb from "../../utils/connectDb";
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
+import Cart from '../../models/Cart';
 
 connectDb();
 
@@ -24,6 +25,7 @@ export default async (req, res) => {
       password
     }).save();
 
+    await new Cart({ user: newUser._id}).save();
     const token = createToken(newUser);
 
     console.log(token);
