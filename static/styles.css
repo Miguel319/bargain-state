@@ -9,6 +9,7 @@
 
 body {
   background: var(--bodyBg);
+  font-family: 'B612', sans-serif;
 }
 
 #menu {
