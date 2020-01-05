@@ -24,57 +24,66 @@ function Header({ user }) {
             <Image
               size="mini"
               src="/static/logo.svg"
-              style={{ marginRight: "1em" }}
+              style={{ marginRight: "1em", fontSize: "15px" }}
             >
               Bargain State
             </Image>
           </Menu.Item>
         </Link>
-        <Link href="/cart">
-          <Menu.Item header active={isActive("/cart")}>
-            <Icon name="cart" size="large"></Icon>
-            Cart
-          </Menu.Item>
-        </Link>
-        {isRootOrAdmin && (
-          <Link href="/create">
-            <Menu.Item header header active={isActive("/create")}>
-              <Icon size="large" name="add circle"></Icon>
-              Create
+        <div
+          // Tim Sykes-
+
+          style={{
+            display: "flex",
+            justifyContent: "space-around"
+          }}
+        >
+          <Link href="/cart">
+            <Menu.Item header active={isActive("/cart")}>
+              <Icon name="cart" size="large"></Icon>
+              Cart
             </Menu.Item>
           </Link>
-        )}
+          {isRootOrAdmin && (
+            <Link href="/create">
+              <Menu.Item header header active={isActive("/create")}>
+                <Icon size="large" name="add circle"></Icon>
+                Create
+              </Menu.Item>
+            </Link>
+          )}
 
-        {user ? (
-          <>
-            <Link href="/account">
-              <Menu.Item header header active={isActive("/account")}>
-                <Icon size="large" name="user"></Icon>
-                Account
+          {user ? (
+            <>
+              <Link href="/account">
+                <Menu.Item header header active={isActive("/account")}>
+                  <Icon size="large" name="user"></Icon>
+                  Account
+                </Menu.Item>
+              </Link>
+              <Menu.Item onClick={handleLogout} header>
+                <Icon size="large" name="sign out"></Icon>
+                Logout
               </Menu.Item>
-            </Link>
-            <Menu.Item onClick={handleLogout} header>
-              <Icon size="large" name="sign out"></Icon>
-              Logout
-            </Menu.Item>
-          </>
-        ) : (
-          <>
-            <Link href="/login">
-              <Menu.Item header header active={isActive("/login")}>
-                <Icon size="large" name="sign in"></Icon>
-                Sign in
-              </Menu.Item>
-            </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Menu.Item header header active={isActive("/login")}>
+                  <Icon size="large" name="sign in"></Icon>
+                  Sign in
+                </Menu.Item>
+              </Link>
 
-            <Link href="/signup">
-              <Menu.Item header header active={isActive("/signup")}>
-                <Icon size="large" name="signup"></Icon>
-                Sign up
-              </Menu.Item>
-            </Link>
-          </>
-        )}
+              <Link href="/signup">
+                <Menu.Item header header active={isActive("/signup")}>
+                  <Icon size="large" name="signup"></Icon>
+                  Sign up
+                </Menu.Item>
+              </Link>
+            </>
+          )}
+        </div>
       </Container>
     </Menu>
   );

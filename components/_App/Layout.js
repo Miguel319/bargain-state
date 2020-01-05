@@ -9,13 +9,16 @@ function Layout({ children, user }) {
     <>
       <Head>
         <HeadContent />
-        {/* Stylesheets */}
         <link rel="stylesheet" type="text/css" href="/static/styles.css" />
         <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
         <link
           rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css"
         />
+        <link
+          href="https://fonts.googleapis.com/css?family=B612&display=swap"
+          rel="stylesheet"
+        ></link>
         <title>Bargain State</title>
       </Head>
       <Header user={user} />
