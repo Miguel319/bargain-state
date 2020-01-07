@@ -14,13 +14,16 @@ export default async (req, res) => {
     case "PUT":
       await handlePutRequest(req, res);
       break;
+    case "DELETE":
+      await handleDeleteRequest(req, res);
+      break;
     default:
       res.status(405).send(`Method ${req.method} not allowed`);
   }
 };
 
 const handleGetRequest = async (req, res) => {
-  noToken(req);
+  noToken(req, res);
 
   try {
     const { userId } = getToken(req);
@@ -31,14 +34,14 @@ const handleGetRequest = async (req, res) => {
     });
     res.status(200).json(cart.products);
   } catch (e) {
-    catchErr(e);
+    catchErr(e, res);
   }
 };
 
 const handlePutRequest = async (req, res) => {
   const { quantity, productId } = req.body;
 
-  noToken(req);
+  noToken(req, res);
 
   try {
     const { userId } = getToken(req);
@@ -54,7 +57,6 @@ const handlePutRequest = async (req, res) => {
         { _id: cart._id, "products.product": productId },
         { $inc: { "products.$.quantity": quantity } }
       );
-
     } else {
       const newProduct = { quantity, product: productId };
 
@@ -70,12 +72,36 @@ const handlePutRequest = async (req, res) => {
   }
 };
 
+const handleDeleteRequest = async (req, res) => {
+  const { productId } = req.query;
+
+  noToken(req, res);
+
+  try {
+    const { userId } = getToken(req);
+
+    const cart = await Cart.findOneAndUpdate(
+      { user: userId },
+      { $pull: { products: { product: productId } } },
+      { new: true }
+    ).populate({
+      path: "products.product",
+      model: "Product"
+    });
+    
+
+    res.status(200).json(cart.products);
+  } catch (e) {
+    catchErr(e, res);
+  }
+};
+
 const catchErr = (e, res) => {
-  console.error(error);
+  console.error(e);
   res.status(403).send("Please login again");
 };
 
-const noToken = req => {
+const noToken = (req, res) => {
   if (!("authorization" in req.headers)) {
     return res.status(401).send("No authorization token");
   }
