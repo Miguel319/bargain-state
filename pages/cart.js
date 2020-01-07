@@ -6,9 +6,12 @@ import axios from "axios";
 import baseUrl from "../utils/baseUrl";
 import React from "react";
 import cookie from 'js-cookie';
+import catchErrors from "../utils/catchErrors";
 
 function Cart({ products, user }) {
   const [cartProducts, setCartProducts] = React.useState(products);
+  const [success, setSuccess] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const removeFromCart = async (productId) => {
     const url = `${baseUrl}/api/cart`;
@@ -24,15 +27,36 @@ function Cart({ products, user }) {
 
   };
 
-  console.log(products);
+  const checkout = async (paymentData) => {
+    try {
+      setLoading(true);
+      const url = `${baseUrl}/api/checkout`;
+      const token = cookie.get('token');
+      const payload = { paymentData };
+      const headers = { headers: { Authorization: token } };
+      const reponse = await axios.post(url, payload, headers);
+      setSuccess(true);
+    } catch (e) {
+      catchErrors(e, window.alert);
+    } finally {
+      setLoading(false);
+    }
+
+  };
+  
   return (
-    <Segment>
+    <Segment loading={loading}>
       <CartItemList
         removeFromCart={removeFromCart}
         user={user}
         products={cartProducts}
+        success={success}
       />
-      <CartSummary products={cartProducts} />
+      <CartSummary
+        success={success}
+        products={cartProducts}
+        checkout={checkout}
+      />
     </Segment>
   );
 }
