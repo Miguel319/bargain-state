@@ -1,23 +1,61 @@
-import { Header, Segment, Button, Icon } from "semantic-ui-react";
+import { Header, Segment, Button, Icon, Item } from "semantic-ui-react";
+import { useRouter } from "next/router";
 
-function CartItemList() {
-  const user = false;
+function CartItemList({ products, user, removeFromCart }) {
+  const router = useRouter();
+
+  const redirectToProducts = () => router.push("/");
+  const redirectToProductDetails = () =>
+    router.push(`/product?_id=${p.product._id}`);
+  const redirectToLogin = () => router.push("/login");
+
+  const mapCartProductsToItems = products =>
+    products.map(p => ({
+      childKey: p.product._id,
+      header: ( 
+      <Item.Header as="a" onClick={redirectToProductDetails}>
+        {p.product.name}
+      </Item.Header>), 
+      image: p.product.mediaUrl,
+      meta: `${p.quantity} x ${p.product.price}`,
+      fluid: "true",
+      extra: (
+        <Button
+          basic
+          icon="remove"
+          floated="right"
+          onClick={() => removeFromCart(p.product._id)}
+        ></Button>
+      )
+    }));
+
+  if (products.length === 0) {
+    return (
+      <Segment secondary color="blue" inverted textAlign="center" placeholder>
+        <Header icon>
+          <Icon name="shopping basket" />
+          Your cart is currently empty.
+        </Header>
+
+        <div>
+          {user ? (
+            <Button color="orange" onClick={redirectToProducts}>
+              View Products
+            </Button>
+          ) : (
+            <Button onClick={redirectToLogin}>
+              Login so you can add products.
+            </Button>
+          )}
+        </div>
+      </Segment>
+    );
+  }
 
   return (
-    <Segment secondary color="blue" inverted textAlign="center" placeholder>
-      <Header icon>
-        <Icon name="shopping basket" />
-        Your cart is currently empty.
-      </Header>
-
-      <div>
-        {user ? (
-          <Button color="orange">View Products</Button>
-        ) : (
-          <Button>Login so you can add products.</Button>
-        )}
-      </div>
-    </Segment>
+    <Item.Group divided
+      items={mapCartProductsToItems(products)}
+    />
   );
 }
 

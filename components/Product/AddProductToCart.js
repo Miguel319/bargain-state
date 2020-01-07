@@ -32,7 +32,7 @@ function AddProductToCart({ user, productId }) {
       await axios.put(url, payload, headers);
       setSuccess(true);
     } catch (e) {
-      catchErrors(err.message, window.alert);
+      catchErrors(e.message, window.alert);
     } finally {
       setLoading(false);
     }
