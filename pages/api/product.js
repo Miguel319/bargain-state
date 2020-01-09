@@ -1,4 +1,5 @@
 import Product from "../../models/Product";
+import Cart from "../../models/Cart";
 import connectDb from "../../utils/connectDb";
 
 connectDb();
@@ -50,17 +51,31 @@ async function handlePostReq(req, res) {
       product: product.data
     });
   } catch (e) {
-    console.error(e);
-    return res.status(500).json({
-      success: false,
-      message: "Unable to process operation. Please try again later."
-    });
+    catchErr(e, res);
   }
   res.status(201).json(product);
 }
 
 const handleDeleteReq = async (req, res) => {
   const { _id } = req.query;
-  await Product.findOneAndDelete({ _id });
-  res.status(204).json({});
+  try {
+    await Product.findOneAndDelete({ _id });
+
+    await Cart.updateMany(
+      { "products.product": _id },
+      { $pull: { products: { product: _id } } }
+    );
+
+    res.status(204).json({});
+  } catch (e) {
+    catchErr(e, res);
+  }
+};
+
+const catchErr = (e, res) => {
+  console.error(e);
+  return res.status(500).json({
+    success: false,
+    message: "Unable to process operation. Please try again later."
+  });
 };

@@ -1,6 +1,6 @@
 import Order from "../../models/Order";
 import jwt from "jsonwebtoken";
-import connectDb from '../../utils/connectDb';
+import connectDb from "../../utils/connectDb";
 
 connectDb();
 
@@ -8,12 +8,14 @@ export default async (req, res) => {
   try {
     const { userId } = getToken(req);
 
-    const orders = await Order.find({ user: userId }).populate({
-      path: "products.product",
-      model: "Product"
-    });
+    const orders = await Order.find({ user: userId })
+      .sort({ createdAt: 'desc'})
+      .populate({
+        path: "products.product",
+        model: "Product"
+      });
 
-    res.status(200).json({ orders } );
+    res.status(200).json({ orders });
   } catch (e) {
     catchErr(e, res);
   }
